@@ -1,9 +1,23 @@
 extern crate bindgen;
 
-fn sdk_path() -> Result<String, std::io::Error> {
+fn sdk_path(target :&str) -> Result<String, std::io::Error> {
     use std::process::Command;
+
+    let sdk = if target.contains("apple-darwin") {
+        "macosx"
+    } else if target == "x86_64-apple-ios" || target == "i386-apple-ios" {
+        "iphonesimulator"
+    } else if target == "aarch64-apple-ios"
+        || target == "armv7-apple-ios"
+        || target == "armv7s-apple-ios"
+    {
+        "iphoneos"
+    } else {
+        unreachable!();
+    };
+
     let output = Command::new("xcrun")
-        .args(&["--sdk", "iphoneos", "--show-sdk-path"])
+        .args(&["--sdk", sdk, "--show-sdk-path"])
         .output()?
         .stdout;
     let prefix_str = std::str::from_utf8(&output).expect("invalid output from `xcrun`");
@@ -122,6 +136,6 @@ fn main() {
         panic!("coreaudio-sys requires macos or ios target");
     }
 
-    let directory = sdk_path().ok();
+    let directory = sdk_path(&target).ok();
     build(directory.as_ref().map(String::as_ref), &target);
 }
