@@ -1,5 +1,5 @@
 [package]
-name = "uikit-sys"
+name = "test-all-ios-frameworks"
 version = "0.1.0"
 authors = ["Sebastian Imlay <sebastian.imlay@gmail.com>"]
 edition = "2018"
