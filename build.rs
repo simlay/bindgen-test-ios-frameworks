@@ -108,8 +108,15 @@ fn build(sdk_path: Option<&str>, target: &str) {
     builder = builder.blacklist_item("MPSSVGF");
 
     // https://github.com/rust-lang/rust-bindgen/issues/1705
-    builder = builder.blacklist_item("UIStepper");
-    builder = builder.blacklist_item("SCNCameraController");
+    builder = builder.blacklist_item("IUIStepper");
+    builder = builder.blacklist_item("ISCNCameraController");
+
+    // PDFThumbnailView has a parameter named PDFView.
+    builder = builder.blacklist_item("PDFView");
+    builder = builder.blacklist_item("IPDFThumbnailView");
+
+    // This is because objc::runtime::Object doesn't implement Copy or Clone.
+    builder = builder.blacklist_item("objc_object");
 
     let meta_header: Vec<_> = headers
         .iter()
